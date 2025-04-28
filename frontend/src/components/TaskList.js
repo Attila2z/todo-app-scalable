@@ -1,9 +1,8 @@
-import React from 'react';
 import TaskItem from './TaskItem';
 
-function TaskList({ tasks, onDelete, onMarkImportant, importantFeatureEnabled, importantOnly }) {
+function TaskList({ tasks, onDelete, onMarkImportant, onMarkDone, importantFeatureEnabled, importantOnly }) {
   return (
-    <ul className="space-y-4">
+    <ul className="list-none p-0">
       {tasks
         .filter(task => !importantOnly || task.isImportant)
         .map(task => (
@@ -12,6 +11,7 @@ function TaskList({ tasks, onDelete, onMarkImportant, importantFeatureEnabled, i
             task={task}
             onDelete={onDelete}
             onMarkImportant={onMarkImportant}
+            onMarkDone={onMarkDone}
             importantFeatureEnabled={importantFeatureEnabled}
           />
         ))}

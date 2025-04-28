@@ -58,10 +58,16 @@ function App() {
       .catch(error => console.error('Error marking important:', error));
   };
 
+  const markDone = (id) => {
+    fetch(`http://localhost:5068/tasks/${id}/mark-done`, { method: 'PATCH' })
+      .then(() => fetchTasks())
+      .catch(error => console.error('Error marking done:', error));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-center mb-6">Todo List App</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Attila's To-do List Application</h1>
 
         <TaskForm
           title={newTaskTitle}
@@ -89,6 +95,7 @@ function App() {
           tasks={tasks}
           onDelete={deleteTask}
           onMarkImportant={markImportant}
+          onMarkDone={markDone}
           importantFeatureEnabled={importantFeatureEnabled}
           importantOnly={importantOnly}
         />
