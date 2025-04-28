@@ -64,6 +64,13 @@ function App() {
       .catch(error => console.error('Error marking done:', error));
   };
 
+  const unmarkDone = (id) => {
+    fetch(`http://localhost:5068/tasks/${id}/unmark-done`, { method: 'PATCH' })
+      .then(() => fetchTasks())
+      .catch(error => console.error('Error unmarking done:', error));
+  };
+  
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
@@ -96,6 +103,7 @@ function App() {
           onDelete={deleteTask}
           onMarkImportant={markImportant}
           onMarkDone={markDone}
+          onUnmarkDone={unmarkDone}
           importantFeatureEnabled={importantFeatureEnabled}
           importantOnly={importantOnly}
         />

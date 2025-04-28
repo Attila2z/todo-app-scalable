@@ -1,6 +1,6 @@
 import TaskItem from './TaskItem';
 
-function TaskList({ tasks, onDelete, onMarkImportant, onMarkDone, importantFeatureEnabled, importantOnly }) {
+function TaskList({ tasks, onDelete, onMarkImportant, onMarkDone, onUnmarkDone, importantFeatureEnabled, importantOnly }) {
   return (
     <ul className="list-none p-0">
       {tasks
@@ -12,6 +12,7 @@ function TaskList({ tasks, onDelete, onMarkImportant, onMarkDone, importantFeatu
             onDelete={onDelete}
             onMarkImportant={onMarkImportant}
             onMarkDone={onMarkDone}
+            onUnmarkDone={onUnmarkDone}
             importantFeatureEnabled={importantFeatureEnabled}
           />
         ))}
