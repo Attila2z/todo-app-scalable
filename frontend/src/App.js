@@ -1,8 +1,12 @@
+import React from 'react';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
 import { useEffect, useState } from 'react';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskDescription, setNewTaskDescription] = useState("");
   const [importantOnly, setImportantOnly] = useState(false);
   const [importantFeatureEnabled, setImportantFeatureEnabled] = useState(false);
 
@@ -29,13 +33,17 @@ function App() {
     fetch('http://localhost:5068/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTaskTitle })
+      body: JSON.stringify({
+        title: newTaskTitle,
+        description: newTaskDescription
+      })
     })
-    .then(() => {
-      setNewTaskTitle("");
-      fetchTasks();
-    })
-    .catch(error => console.error('Error adding task:', error));
+      .then(() => {
+        setNewTaskTitle("");
+        setNewTaskDescription("");
+        fetchTasks();
+      })
+      .catch(error => console.error('Error adding task:', error));
   };
 
   const deleteTask = (id) => {
@@ -51,52 +59,40 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-      <h1 style={{ textAlign: "center" }}>Todo List App</h1>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Todo List App</h1>
 
-      <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
-        <input
-          value={newTaskTitle}
-          onChange={e => setNewTaskTitle(e.target.value)}
-          placeholder="New task title"
-          style={{ flexGrow: 1, padding: "10px" }}
+        <TaskForm
+          title={newTaskTitle}
+          description={newTaskDescription}
+          onTitleChange={e => setNewTaskTitle(e.target.value)}
+          onDescriptionChange={e => setNewTaskDescription(e.target.value)}
+          onAddTask={addTask}
         />
-        <button onClick={addTask} style={{ padding: "10px" }}>Add Task</button>
+
+        {importantFeatureEnabled && (
+          <div className="flex items-center justify-center my-4">
+            <label className="flex items-center space-x-2 text-gray-700">
+              <input
+                type="checkbox"
+                checked={importantOnly}
+                onChange={e => setImportantOnly(e.target.checked)}
+                className="accent-blue-500"
+              />
+              <span>Show only Important tasks</span>
+            </label>
+          </div>
+        )}
+
+        <TaskList
+          tasks={tasks}
+          onDelete={deleteTask}
+          onMarkImportant={markImportant}
+          importantFeatureEnabled={importantFeatureEnabled}
+          importantOnly={importantOnly}
+        />
       </div>
-
-      {importantFeatureEnabled && (
-        <div style={{ marginBottom: "20px" }}>
-          <label>
-            <input
-              type="checkbox"
-              checked={importantOnly}
-              onChange={e => setImportantOnly(e.target.checked)}
-            />
-            {" "} Show only Important tasks
-          </label>
-        </div>
-      )}
-
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {tasks
-          .filter(task => !importantOnly || task.isImportant)
-          .map(task => (
-            <li key={task.id} style={{ marginBottom: "10px", padding: "10px", border: "1px solid lightgray", borderRadius: "5px" }}>
-              {task.title}{" "}
-              {task.isImportant && (
-                <strong style={{ color: "red" }}>(Important)</strong>
-              )}
-              <button onClick={() => deleteTask(task.id)} style={{ marginLeft: "10px" }}>
-                Delete
-              </button>
-              {!task.isImportant && importantFeatureEnabled && (
-                <button onClick={() => markImportant(task.id)} style={{ marginLeft: "10px" }}>
-                  Mark Important
-                </button>
-              )}
-            </li>
-          ))}
-      </ul>
     </div>
   );
 }
